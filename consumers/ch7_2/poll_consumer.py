@@ -10,7 +10,7 @@ import time
 class PollConsumer(BaseConsumer):
     def __init__(self, group_id):
         super().__init__(group_id)
-        self.topics = []
+        self.topics = ['apis.seouldata.rt-bicycle']
         self.MIN_COMMIT_COUNT = 100
         conf = {'bootstrap.servers': self.BOOTSTRAP_SERVERS,
                 'group.id': self.group_id,
@@ -45,6 +45,7 @@ class PollConsumer(BaseConsumer):
                 msg_cnt += 1
 
                 # 로직 처리 완료 후 Async Commit 수행 후 2초 대기
+                # 커밋 구간 사이에서 Consumer Program Down & 재시작하는 경우 메시지 중복처리가 될 수 있음
                 if msg_cnt % self.MIN_COMMIT_COUNT == 0:
                     self.consumer.commit(asynchronous=True)
                     self.logger.info(f'Commit 완료, partition: {msg.partition()}, offset: {msg.offset()}')

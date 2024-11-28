@@ -9,7 +9,7 @@ import time
 class ConsumeConsumer(BaseConsumer):
     def __init__(self, group_id):
         super().__init__(group_id)
-        self.topics = []
+        self.topics = ['apis.seouldata.rt-bicycle']
 
         conf = {'bootstrap.servers': self.BOOTSTRAP_SERVERS,
                 'group.id': self.group_id,
