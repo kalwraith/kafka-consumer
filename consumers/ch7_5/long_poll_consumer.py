@@ -55,7 +55,7 @@ class LongPollConsumer(BaseConsumer):
                 self.consumer.commit(asynchronous=True)
                 self.logger.info(f'Commit 완료, partition: {msg_val_lst[-1].partition()}, offset: {msg_val_lst[-1].offset()}')
                 rand_sleep_sec = random.choice([30,30,30,30,30,30,30,30,30,60])        # 리스트 값 중 하나 임의 선택, 10번 중 한번 꼴로 60초 수행
-                print(f'랜덤 지연 시간: {rand_sleep_sec}초')
+                self.logger.info(f'랜덤 지연 시간: {rand_sleep_sec}초')
 
                 # sleep 으로 다음 poll 수행을 늦춤
                 time.sleep(rand_sleep_sec)
