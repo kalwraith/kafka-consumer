@@ -18,7 +18,7 @@ class LongPollConsumer(BaseConsumer):
                 'auto.offset.reset': 'earliest',
                 'enable.auto.commit': 'false',
                 'partition.assignment.strategy':'cooperative-sticky',   # range, roundrobin, cooperative-sticky
-                'max.poll.interval.ms':'30000',                         # Default: 5분, setting: 30초
+                'max.poll.interval.ms':'45000',                         # Default: 5분, setting: 45초
                 'session.timeout.ms':'10000'                            # Default: 45초, setting: 10초
                 }
 
@@ -54,7 +54,7 @@ class LongPollConsumer(BaseConsumer):
                 # 로직 처리 완료 후 Async Commit 수행
                 self.consumer.commit(asynchronous=True)
                 self.logger.info(f'Commit 완료, partition: {msg_val_lst[-1].partition()}, offset: {msg_val_lst[-1].offset()}')
-                rand_sleep_sec = random.choice([10,10,10,10,10,11,11,11,11,34])        # 리스트 값 중 하나 임의 선택
+                rand_sleep_sec = random.choice([30,30,30,30,30,30,30,30,30,60])        # 리스트 값 중 하나 임의 선택, 10번 중 한번 꼴로 60초 수행
                 print(f'랜덤 지연 시간: {rand_sleep_sec}초')
 
                 # sleep 으로 다음 poll 수행을 늦춤
