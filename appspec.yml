@@ -18,7 +18,7 @@ file_exists_behavior: OVERWRITE
 # permisstions: file copy 후 권한 상세 지정
 # pattern, except 키워드를 통해 대상 상세지정 가능
 permissions:
-  - object: /src/kafka-kafka-consumer
+  - object: /src/kafka-consumer
     owner: kafka
     group: kafka
     mode: 755
