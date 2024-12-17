@@ -28,15 +28,11 @@ class ConsumeConsumer(BaseConsumer):
                 msg_lst = self.consumer.consume(num_messages=100)
                 if msg_lst is None or len(msg_lst) == 0: continue
 
-                self.logger.info(f'message count:{msg_lst.count()}')
+                self.logger.info(f'message count:{len(msg_lst)}')
                 for msg in msg_lst:
-                    if msg.error():
-                        if msg_lst.error().code() == KafkaError._PARTITION_EOF:
-                            # End of partition event
-                            sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
-                                             (msg.topic(), msg.partition(), msg.offset()))
-                        elif msg.error():
-                            raise KafkaException(msg.error())
+                    error = msg.error()
+                    if error:
+                        self.handle_error(msg, error)
 
                 # 로직 처리 부분
                 # Kafka 레코드에 대한 전처리, Target Sink 등 수행
@@ -45,9 +41,16 @@ class ConsumeConsumer(BaseConsumer):
                 df = pd.DataFrame(msg_val_lst)
                 print(df[:10])
 
+
+        except KafkaException as e:
+            self.logger.exception("Kafka exception occurred during message consumption")
+
+        except KeyboardInterrupt:  # Ctrl + C 눌러 종료시
+            self.logger.info("Shutting down consumer due to keyboard interrupt.")
+
         finally:
-            # Close down consumer to commit final offsets.
             self.consumer.close()
+            self.logger.info("Consumer closed.")
 
 
 if __name__ == '__main__':
