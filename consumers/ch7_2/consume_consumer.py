@@ -42,7 +42,7 @@ class ConsumeConsumer(BaseConsumer):
                 self.logger.info(f'message 처리 로직 시작')
                 msg_val_lst = [json.loads(msg.value().decode('utf-8')) for msg in msg_lst]
                 df = pd.DataFrame(msg_val_lst)
-                print(df)
+                print(df[:10])
 
 
                 self.logger.info(f'message 처리 로직 완료, Async Commit 후 2초 대기')
