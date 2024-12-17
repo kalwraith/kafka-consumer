@@ -35,8 +35,7 @@ class PollConsumer(BaseConsumer):
                                          (msg.topic(), msg.partition(), msg.offset()))
                     elif msg.error():
                         raise KafkaException(msg.error())
-                else:
-                    self.consumer.commit(asynchronous=False)
+
 
                 # 로직 처리 부분
                 # Kafka 레코드에 대한 전처리, Target Sink 등 수행
