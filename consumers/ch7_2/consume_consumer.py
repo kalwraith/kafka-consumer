@@ -48,7 +48,7 @@ class ConsumeConsumer(BaseConsumer):
                 self.logger.info(f'message 처리 로직 완료, Async Commit 후 2초 대기')
                 # 로직 처리 완료 후 Async Commit 수행
                 self.consumer.commit(asynchronous=True)
-                self.logger.info(f'Commit 완료, partition: {msg_val_lst[-1].partition()}, offset: {msg_val_lst[-1].offset()}')
+                self.logger.info(f'Commit 완료')
                 time.sleep(2)
 
         finally:

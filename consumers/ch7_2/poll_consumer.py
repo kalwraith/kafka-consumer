@@ -36,7 +36,6 @@ class PollConsumer(BaseConsumer):
                     elif msg.error():
                         raise KafkaException(msg.error())
 
-
                 # 로직 처리 부분
                 # Kafka 레코드에 대한 전처리, Target Sink 등 수행
                 df = pd.DataFrame([json.loads(msg.value().decode('utf-8'))])
