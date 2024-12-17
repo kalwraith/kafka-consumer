@@ -28,13 +28,9 @@ class PollConsumer(BaseConsumer):
                 msg = self.consumer.poll(timeout=1.0)
                 if msg is None: continue
 
-                if msg.error():
-                    if msg.error().code() == KafkaError._PARTITION_EOF:
-                        # End of partition event
-                        sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
-                                         (msg.topic(), msg.partition(), msg.offset()))
-                    elif msg.error():
-                        raise KafkaException(msg.error())
+                error = msg.error()
+                if error:
+                    self.handle_error(msg, error)
 
                 # 로직 처리 부분
                 # Kafka 레코드에 대한 전처리, Target Sink 등 수행
@@ -46,13 +42,18 @@ class PollConsumer(BaseConsumer):
                 # 커밋 구간 사이에서 Consumer Program Down & 재시작하는 경우 메시지 중복처리가 될 수 있음
                 if msg_cnt % self.MIN_COMMIT_COUNT == 0:
                     self.consumer.commit(asynchronous=True)
-                    self.logger.info(f'Commit 완료, partition: {msg.partition()}, offset: {msg.offset()}')
+                    self.logger.info(f'Commit 완료')
                     time.sleep(2)
 
-        finally:
-            # Close down consumer to commit final offsets.
-            self.consumer.close()
+        except KafkaException as e:
+            self.logger.exception("Kafka exception occurred during message consumption")
 
+        except KeyboardInterrupt:  # Ctrl + C 눌러 종료시
+            self.logger.info("Shutting down consumer due to keyboard interrupt.")
+
+        finally:
+            self.consumer.close()
+            self.logger.info("Consumer closed.")
 
 if __name__ == '__main__':
     consume_consumer = PollConsumer('poll_consumer')
