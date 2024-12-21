@@ -56,5 +56,5 @@ class PollConsumer(BaseConsumer):
             self.logger.info("Consumer closed.")
 
 if __name__ == '__main__':
-    consume_consumer = PollConsumer('poll_consumer')
-    consume_consumer.poll()
+    poll_consumer = PollConsumer('poll_consumer')
+    poll_consumer.poll()
