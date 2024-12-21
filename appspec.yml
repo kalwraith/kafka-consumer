@@ -13,7 +13,7 @@ files:
 
 # /src/kafka-producer 에 동일 파일이 존재할 경우 덮어쓰기
 # DISALLOW|OVERWRITE|RETAIN 지정 가능
-file_exists_behavior: OVERWRITE
+file_exists_behavior: RETAIN
 
 # permisstions: file copy 후 권한 상세 지정
 # pattern, except 키워드를 통해 대상 상세지정 가능
